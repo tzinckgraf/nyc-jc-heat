@@ -1,43 +1,42 @@
 import React, { useEffect, useState } from 'react';
 import { GeoJSON } from 'react-leaflet';
 
-import shp from "shpjs";
 import L from 'leaflet';
-
-import traverses from '../data/traverses.zip';
-import nyc_all_data from '../data/nyc_all_data.json';
+import shp from "shpjs";
 
 
 export function GeoJsonPointLayer(props) {
-
+    /**
+     * A layer for the individual traverses.
+     *
+     * This layer runs pretty slow as it shows every single
+     * traversal point. For improved performance, everything
+     * is rendered on one canvas with the same fillColor and color,
+     * but that only does so much with 30k points.
+     *
+     */
+    const { url } = props;
     const [features, setFeatures] = useState([]);
     const [renderer, setRenderer] = useState(null);
 
     var geojsonMarkerOptions = {
         radius: 8,
         fillColor: "#ff7800",
-        color: "#000",
+        color: "#ff7800",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8
     };
 
-
     useEffect(() => {
         const renderer = L.canvas({padding: 0.75});
         setRenderer(renderer);
-        fetch(traverses).then(r => {
+        fetch(url).then(r => {
             return shp(r.url);
         }).then(data => {
             console.log(data);
             setFeatures(data);
         });
-
-        /*
-        shp(`file:traverses.zip`).then(data => {
-            console.log(data);
-        });
-        */
     }, []);
 
     const pointToLayer = (feature, latlng) => {
@@ -46,7 +45,6 @@ export function GeoJsonPointLayer(props) {
 
     if (features.length == 0) return (<></>);
 
-    //data={features[0].features.slice(0, 10000)}
     return (<>
         <GeoJSON
             data={features[0].features}
@@ -54,10 +52,17 @@ export function GeoJsonPointLayer(props) {
             pointToLayer={pointToLayer}
         />;
     </>);
-    
 }
 
+
 export function GeoJsonLayer(props) {
+    /**
+     * The GeoJsonLayer is used to show the individual blocks
+     * as they come in GeoJSON format.
+     *
+     */
+
+    const { url } = props;
 
     const [features, setFeatures] = useState([]);
     const [renderer, setRenderer] = useState(null);
@@ -69,29 +74,24 @@ export function GeoJsonLayer(props) {
         });
     };
 
-
+    /*
     useEffect(() => {
         const renderer = L.canvas({padding: 0.75});
         setRenderer(renderer);
-        fetch(nyc_all_data).then(r => {
+        fetch(url).then(r => {
             console.log(r);
         }).then(data => {
             console.log(data);
             setFeatures(data);
         });
-
-        /*
-        shp(`file:traverses.zip`).then(data => {
-            console.log(data);
-        });
-        */
     }, []);
+    */
 
     return (<>
         <GeoJSON
-            data={nyc_all_data}
+            data={url}
             onEachFeature={onEachFeature}
         />;
     </>);
-    
 }
+

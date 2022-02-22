@@ -6,18 +6,19 @@ import "leaflet-geotiff"
 import "leaflet-geotiff/leaflet-geotiff-plotty"
 import "leaflet-geotiff/leaflet-geotiff-vector-arrows"
 
-//import { parseGeoraster } from "georaster";
-//import { GeoRasterLayer } from "georaster-layer-for-leaflet";
-
-import oUrl from "../data/rasters/af_t_f_ranger.tif";
-import oUrl2 from "../data/rasters/af_t_f_ranger.tif.ovr";
-
 import chroma from "chroma-js";
 
+// due to weird import issues, it was easier to use these as require statements
 var parseGeoraster = require("georaster");
 var GeoRasterLayer = require("georaster-layer-for-leaflet");
 
+
 export const GeotiffLayer = (props) => {
+    /*
+     * This does not actually work, but is another library I was trying.
+     *
+     * It may actally work now
+     */
     const context = useLeafletContext();
 
     useEffect(() => {
@@ -47,8 +48,11 @@ export const GeoRasterTiffLayer = (props) => {
     useEffect(() => {
         fetch(url)
             .then(response => response.arrayBuffer())
-            .then(arrayBuffer => parseGeoraster(arrayBuffer))
-            .then(data => setData(data));
+            .then(arrayBuffer => {
+                console.log(url);
+                return parseGeoraster(arrayBuffer)})
+            .then(data => setData(data))
+            .catch(err => console.log(err));
     }, [url]);
 
     useEffect(() => {
@@ -64,33 +68,22 @@ export const GeoRasterTiffLayer = (props) => {
 
         http://leafletjs.com/reference-1.2.0.html#gridlayer
         */
-        fetch(url)
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => {
-                console.log(arrayBuffer);
-                return parseGeoraster(arrayBuffer);
-            })
-            .then(data => {
-                console.log(data);
-                if (data == null) return;
-                const colorChroma = chroma.scale(['#f00', '#0f0']).domain([data.mins[0], data.maxs[0]]);
-                var layer = new GeoRasterLayer({
-                    georaster: data,
-                    opacity: 0.7,
-                    resolution: 64,
-                    pixelValuesToColorFn: values => {
-                        return values[0] > 1 ? colorChroma(values[0]) : null;
-                        //return values[0] > 1 ? '#ffffff' : '#000000';
-                    }
-                });
+        if (data == null) return;
+        const colorChroma = chroma.scale(['#f00', '#0f0']).domain([data.mins[0], data.maxs[0]]);
+        var layer = new GeoRasterLayer({
+            georaster: data,
+            opacity: 0.7,
+            resolution: 64,
+            pixelValuesToColorFn: values => {
+                return values[0] > 1 ? colorChroma(values[0]) : null;
+                //return values[0] > 1 ? '#ffffff' : '#000000';
+            }
+        });
         
-                container.addLayer(layer)
-            });
-        /*
+        container.addLayer(layer)
         return () => {
             container.removeLayer(layer);
         };
-        */
     });
 
     return null;

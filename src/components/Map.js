@@ -18,11 +18,15 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 export function Map(props) {
 
+    // this is the center for Jersey City
     const center = [40.7107994, -74.122978,12];
     const rasterRef = useRef();
-    //const rasterUrl = "../data/rasters/jc/af_heat_index_f_ranger.tif";
-    const rasterUrl = "../data/rasters/nyc/af_hi_f.tif";
-    //const rasterUrl = "/af_heat_index_f_ranger.tif";
+
+    // for testing purposes, use URLs based on data
+    // in the /public directory
+    const rasterUrl = "/rasters/nyc/af_hi_f.tif";
+    const geojsonUrl = "/geojson/nyc_all_data.json"
+
     const rasterOpts = {
         band: 0,
         displayMin: 0,
@@ -41,7 +45,9 @@ export function Map(props) {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <GeoJsonLayer />
+            <GeoJsonLayer
+                url={geojsonUrl}
+            />
             <GeoRasterTiffLayer
                 layerRef={rasterRef}
                 url={rasterUrl}
