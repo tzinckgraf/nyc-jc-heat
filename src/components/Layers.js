@@ -74,22 +74,24 @@ export function GeoJsonLayer(props) {
         });
     };
 
-    /*
     useEffect(() => {
         const renderer = L.canvas({padding: 0.75});
         setRenderer(renderer);
-        fetch(url).then(r => {
-            console.log(r);
-        }).then(data => {
-            console.log(data);
+        fetch(url,{ headers : {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+            }})
+        .then(r => r.json())
+        .then(data => {
             setFeatures(data);
         });
     }, []);
-    */
+
+    if (features.length == 0) return (<></>);
 
     return (<>
         <GeoJSON
-            data={url}
+            data={features}
             onEachFeature={onEachFeature}
         />;
     </>);
