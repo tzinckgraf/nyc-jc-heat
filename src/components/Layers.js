@@ -5,9 +5,10 @@ import shp from "shpjs";
 import L from 'leaflet';
 
 import traverses from '../data/traverses.zip';
+import nyc_all_data from '../data/nyc_all_data.json';
 
 
-export function GeoJsonLayer(props) {
+export function GeoJsonPointLayer(props) {
 
     const [features, setFeatures] = useState([]);
     const [renderer, setRenderer] = useState(null);
@@ -51,6 +52,45 @@ export function GeoJsonLayer(props) {
             data={features[0].features}
             style={{ color: 'green' }}
             pointToLayer={pointToLayer}
+        />;
+    </>);
+    
+}
+
+export function GeoJsonLayer(props) {
+
+    const [features, setFeatures] = useState([]);
+    const [renderer, setRenderer] = useState(null);
+
+    const onEachFeature = (feature, layer) => {
+        layer.on({
+            //mouseover: (e) => console.log(feature),
+            //mouseout: (e) => console.log(feature),
+        });
+    };
+
+
+    useEffect(() => {
+        const renderer = L.canvas({padding: 0.75});
+        setRenderer(renderer);
+        fetch(nyc_all_data).then(r => {
+            console.log(r);
+        }).then(data => {
+            console.log(data);
+            setFeatures(data);
+        });
+
+        /*
+        shp(`file:traverses.zip`).then(data => {
+            console.log(data);
+        });
+        */
+    }, []);
+
+    return (<>
+        <GeoJSON
+            data={nyc_all_data}
+            onEachFeature={onEachFeature}
         />;
     </>);
     
