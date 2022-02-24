@@ -1,5 +1,4 @@
 .App {
-  text-align: center;
 }
 
 .App-header {
@@ -14,7 +13,6 @@
 }
 
 .map {
-    margin-top: 5vh;
     height: 90vh;
-    width: 100%;
+    margin-bottom: 5vh;
 }

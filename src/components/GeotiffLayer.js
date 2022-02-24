@@ -43,13 +43,11 @@ export const GeoRasterTiffLayer = (props) => {
     const { url, options, layerRef } = props;
     const context = useLeafletContext();
     const [ data, setData ] = useState(null);
-    console.log(parseGeoraster);
 
     useEffect(() => {
         fetch(url)
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => {
-                console.log(url);
                 return parseGeoraster(arrayBuffer)})
             .then(data => setData(data))
             .catch(err => console.log(err));

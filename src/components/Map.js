@@ -18,6 +18,8 @@ L.Marker.prototype.options.icon = DefaultIcon;
 
 export function Map(props) {
 
+    const { income } = props;
+
     // this is the center for Jersey City
     const center = [40.7107994, -74.122978,12];
     const rasterRef = useRef();
@@ -41,17 +43,25 @@ export function Map(props) {
     return (
     <>
         <MapContainer center={center} zoom={13} className="map">
+            <LayersControl position="topright">
+                <LayersControl.Overlay checked name="Census Data">
+                    <GeoJsonLayer
+                        url={geojsonUrl}
+                        opacity={0.05}
+                        income={income}
+                    />
+                </LayersControl.Overlay>
+                <LayersControl.Overlay checked name="Heatmap">
+                    <GeoRasterTiffLayer
+                        layerRef={rasterRef}
+                        url={rasterUrl}
+                        options={rasterOpts}
+                    />
+                </LayersControl.Overlay>
+            </LayersControl>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <GeoJsonLayer
-                url={geojsonUrl}
-            />
-            <GeoRasterTiffLayer
-                layerRef={rasterRef}
-                url={rasterUrl}
-                options={rasterOpts}
             />
         </MapContainer>
     </>);

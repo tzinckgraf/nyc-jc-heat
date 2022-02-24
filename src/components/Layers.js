@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { GeoJSON } from 'react-leaflet';
 
+import chroma from "chroma-js";
 import L from 'leaflet';
 import shp from "shpjs";
 
@@ -34,7 +35,6 @@ export function GeoJsonPointLayer(props) {
         fetch(url).then(r => {
             return shp(r.url);
         }).then(data => {
-            console.log(data);
             setFeatures(data);
         });
     }, []);
@@ -62,7 +62,8 @@ export function GeoJsonLayer(props) {
      *
      */
 
-    const { url } = props;
+    const { url, opacity, income } = props;
+    const colorChroma = chroma.scale(['#fff', '#000']);
 
     const [features, setFeatures] = useState([]);
     const [renderer, setRenderer] = useState(null);
@@ -73,6 +74,17 @@ export function GeoJsonLayer(props) {
             //mouseout: (e) => console.log(feature),
         });
     };
+
+    const onStyle = (feature) => {
+        // set the opacity of the border based on percentage of population less than the income
+        const opacity = feature.properties[`Income|${income}`];
+        return {
+            fillOpacity: 0,
+            opacity: 1,
+            color: colorChroma(opacity),
+            weight: 3,
+        };
+    }
 
     useEffect(() => {
         const renderer = L.canvas({padding: 0.75});
@@ -93,6 +105,7 @@ export function GeoJsonLayer(props) {
         <GeoJSON
             data={features}
             onEachFeature={onEachFeature}
+            style={onStyle}
         />;
     </>);
 }
