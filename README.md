@@ -1,1 +1,1 @@
-# nyc-jc-heata
+# nyc-jc-heat
