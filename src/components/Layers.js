@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import ReactDOMServer from "react-dom/server";
+
 import { GeoJSON } from 'react-leaflet';
 
 import chroma from "chroma-js";
@@ -55,6 +57,28 @@ export function GeoJsonPointLayer(props) {
 }
 
 
+function FeatureTable(props) {
+    const { properties } = props;
+
+    return (
+        <table>
+            {Object
+                .keys(properties)
+                .filter(x => x.startsWith('Income|') || x == 'heat_index_max')
+                .map(x => {
+                    return (
+                        <tr>
+                            <td>{x == 'heat_index_max' ? 'Max Heat Index' : x}</td>
+                            <td>{x.startsWith('Income|')
+                                ? (parseFloat(properties[x]) * 100).toFixed(2) + "%"
+                                : parseFloat(properties[x]).toFixed(1) + "\u00B0"}</td>
+                        </tr>
+                    );}
+            )}
+        </table>
+    )
+}
+
 export function GeoJsonLayer(props) {
     /**
      * The GeoJsonLayer is used to show the individual blocks
@@ -69,9 +93,12 @@ export function GeoJsonLayer(props) {
     const [renderer, setRenderer] = useState(null);
 
     const onEachFeature = (feature, layer) => {
+        const body = FeatureTable(feature);
+        const bodyHtml = ReactDOMServer.renderToString(body);
+        layer.bindPopup(bodyHtml);
         layer.on({
-            //mouseover: (e) => console.log(feature),
-            //mouseout: (e) => console.log(feature),
+            mouseover: (e) => { layer.openPopup() },
+            mouseout: (e) => { layer.closePopup() }
         });
     };
 

@@ -26,8 +26,8 @@ export function Map(props) {
 
     // for testing purposes, use URLs based on data
     // in the /public directory
-    const rasterUrl = "/rasters/nyc/af_hi_f.tif";
-    const geojsonUrl = "/geojson/nyc_all_data.json";
+    const rasterUrl = "/rasters/nyc/af_hi_f2.tif";
+    const geojsonUrl = "/geojson/new_york_city_hi.geojson";
 
     const rasterOpts = {
         band: 0,

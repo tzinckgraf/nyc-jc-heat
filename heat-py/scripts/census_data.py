@@ -125,9 +125,9 @@ def main():
     #df_census = get_census_data()
     #df_census.to_csv('data/census.csv', index=False)
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     df = df_census.merge(df_geo, left_on="tract", right_on="CT2020")
     geopandas.GeoDataFrame(df).to_file("data/nyc_all_data.geojson", driver="GeoJSON")
+    geopandas.GeoDataFrame(df).to_file("data/nyc_all_data.shp")
 
     import ipdb; ipdb.set_trace() # BREAKPOINT
     pass

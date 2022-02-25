@@ -65,7 +65,9 @@ export function IncomeSlider(props) {
 
     return (
         <>
-        <Typography>Income Percent (less than)</Typography>
+        <Typography sx={{ marginTop: '1rem', marginBottom: '1rem' }}>
+            Income Percent (less than)
+        </Typography>
         <Slider
             aria-label="Income"
             max={250}
