@@ -24,4 +24,5 @@ yarn-error.log*
 
 # assets
 public/
+private/
 src/data
