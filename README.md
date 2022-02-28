@@ -1,20 +1,20 @@
-Setup - React
-=============
-These are instructions to setup the React portion of the repository.
+TypeScript React-based webstory using leaflet for maps.
 
-To begin, install all the libraries
+# Requirements
+
+- Node 16
+
+# Setup
+
 ```
 npm install
+npm run assets
 ```
 
-Next, add the data. There are two pieces of data necessary to run the application.
+# Running
 
-Both pieces of data have url's found in `src/components/Map.js`.
-The url's assume that the data is located in the `public/` directory.
+```
+npm start
+```
 
-The tif files can be found from the osf website.
-For NYC, use https://osf.io/xe4h3/
-For  JC, use https://osf.io/7djpz/
-
-The json file must be created with the heat-py repo. Instructions on that will come later.
-
+Browser should automatically open to `http://localhost:3000`
