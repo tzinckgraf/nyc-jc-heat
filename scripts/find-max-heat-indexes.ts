@@ -23,7 +23,7 @@ export default async function findMaxHeatIndexes(censusFilename: string, travers
     // @ts-ignore
     const geoId = tract.properties['GEOID'];
 
-    if (geoId in traversedTracts) {
+    if (traversedTracts.get(geoId)) {
       // @ts-ignore
       if (heatIndex > traversedTracts.get(geoId).maxHeatIndex) {
         // @ts-ignore
